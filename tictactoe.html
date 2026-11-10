@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Крестики-нолики</title>
+<style>
+  body { font-family: Arial, sans-serif; text-align: center; background: #1e1e2e; color: #fff; }
+  h1 { margin-top: 30px; }
+  #board { display: grid; grid-template-columns: repeat(3, 100px); gap: 6px; justify-content: center; margin: 20px auto; }
+  .cell { width: 100px; height: 100px; background: #313244; font-size: 48px; border: none; color: #fff; cursor: pointer; border-radius: 8px; }
+  .cell:hover { background: #45475a; }
+  #status { font-size: 22px; margin: 10px; }
+  #reset { padding: 10px 20px; font-size: 16px; cursor: pointer; border-radius: 6px; border: none; }
+  a { color: #89b4fa; }
+</style>
+</head>
+<body>
+<h1>Крестики-нолики</h1>
+<div id="status">Ходит: X</div>
+<div id="board"></div>
+<button id="reset">Новая игра</button>
+<p><a href="index.html">На главную</a></p>
+
+<script>
+  const boardEl = document.getElementById('board');
+  const statusEl = document.getElementById('status');
+  const lines = [[0,1,2],[3,4,5],[6,7,8],[0,3,6],[1,4,7],[2,5,8],[0,4,8],[2,4,6]];
+  let cells, current, over;
+
+  function start() {
+    cells = Array(9).fill('');
+    current = 'X';
+    over = false;
+    statusEl.textContent = 'Ходит: X';
+    boardEl.innerHTML = '';
+    for (let i = 0; i < 9; i++) {
+      const b = document.createElement('button');
+      b.className = 'cell';
+      b.addEventListener('click', () => move(i, b));
+      boardEl.appendChild(b);
+    }
+  }
+
+  function move(i, btn) {
+    if (over || cells[i]) return;
+    cells[i] = current;
+    btn.textContent = current;
+    if (lines.some(l => l.every(k => cells[k] === current))) {
+      statusEl.textContent = 'Победил: ' + current + '!';
+      over = true;
+    } else if (cells.every(c => c)) {
+      statusEl.textContent = 'Ничья';
+      over = true;
+    } else {
+      current = current === 'X' ? 'O' : 'X';
+      statusEl.textContent = 'Ходит: ' + current;
+    }
+  }
+
+  document.getElementById('reset').addEventListener('click', start);
+  start();
+</script>
+</body>
+</html>
